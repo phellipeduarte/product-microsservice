@@ -1,5 +1,6 @@
 package com.example.products.services;
 
+import com.example.products.dtos.OrderRequestDTO;
 import com.example.products.enums.PaymentStatusEnum;
 import com.example.products.exceptions.ProductNotFoundException;
 import com.example.products.models.Order;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -25,9 +25,9 @@ public class OrderService {
 
     public List<Order> getByEmail(String email){ return orderRepository.findByClientEmail(email); }
 
-    public Order createOrder(UUID productUUID, String clientEmail){
-        Product product = productRepository.findById(productUUID).orElseThrow(ProductNotFoundException::new);
-        Order order = new Order(clientEmail, PaymentStatusEnum.PENDENTE, product);
-        return order;
+    public Order createOrder(OrderRequestDTO orderRequestDTO){
+        Product product = productRepository.findById(orderRequestDTO.productId()).orElseThrow(ProductNotFoundException::new);
+        Order order = new Order(orderRequestDTO.clientEmail(), PaymentStatusEnum.PENDENTE, product);
+        return orderRepository.save(order);
     }
 }
