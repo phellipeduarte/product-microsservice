@@ -1,5 +1,6 @@
 package com.example.products.models;
 
+import com.example.products.dtos.ProductRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,4 +22,9 @@ public class Product {
     private Double price;
     private String imageURL;
 
+    public Product(ProductRequestDTO productRequestDTO) {
+        this.name = productRequestDTO.name();
+        this.price = productRequestDTO.price();
+        this.imageURL = productRequestDTO.imageURL();
+    }
 }
