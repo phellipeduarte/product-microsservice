@@ -5,8 +5,10 @@ import com.example.products.models.Product;
 import com.example.products.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,8 +24,12 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getAll());
     }
 
-    @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductRequestDTO productRequestDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productRequestDTO));
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity createProduct(
+            @RequestParam("file") MultipartFile multipartFile,
+            @RequestParam("name") String name,
+            @RequestParam("price") String price){
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(name, Double.valueOf(price));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productRequestDTO, multipartFile));
     }
 }

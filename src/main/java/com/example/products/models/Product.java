@@ -22,9 +22,9 @@ public class Product {
     private Double price;
     private String imageURL;
 
-    public Product(ProductRequestDTO productRequestDTO) {
+    public Product(ProductRequestDTO productRequestDTO, String imageURL) {
         this.name = productRequestDTO.name();
         this.price = productRequestDTO.price();
-        this.imageURL = productRequestDTO.imageURL();
+        this.imageURL = imageURL;
     }
 }
