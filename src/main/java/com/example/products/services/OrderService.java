@@ -1,5 +1,6 @@
 package com.example.products.services;
 
+import com.example.products.dtos.EmailRequestDTO;
 import com.example.products.dtos.OrderRequestDTO;
 import com.example.products.enums.PaymentStatusEnum;
 import com.example.products.exceptions.ProductNotFoundException;
@@ -21,6 +22,9 @@ public class OrderService {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    EmailService emailService;
+
     public List<Order> getAll(){ return orderRepository.findAll(); }
 
     public List<Order> getByEmail(String email){ return orderRepository.findByClientEmail(email); }
@@ -28,6 +32,12 @@ public class OrderService {
     public Order createOrder(OrderRequestDTO orderRequestDTO){
         Product product = productRepository.findById(orderRequestDTO.productId()).orElseThrow(ProductNotFoundException::new);
         Order order = new Order(orderRequestDTO.clientEmail(), PaymentStatusEnum.PENDENTE, product);
+
+        String subject = "Seu pedido foi realizado";
+        String body = "Parabéns, seu " + product.getName() + " está aguardando o pagamento de R$" + product.getPrice() + ",00 \n" + product.getImageURL();
+        EmailRequestDTO emailRequestDTO = new EmailRequestDTO(orderRequestDTO.clientEmail(), subject, body);
+
+        emailService.sendEmail(emailRequestDTO);
         return orderRepository.save(order);
     }
 }
