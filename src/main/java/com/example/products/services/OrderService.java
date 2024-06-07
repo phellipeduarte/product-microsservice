@@ -4,6 +4,7 @@ import com.example.products.dtos.EmailRequestDTO;
 import com.example.products.dtos.OrderRequestDTO;
 import com.example.products.enums.PaymentStatusEnum;
 import com.example.products.exceptions.ProductNotFoundException;
+import com.example.products.exceptions.ProductSoldException;
 import com.example.products.models.Order;
 import com.example.products.models.Product;
 import com.example.products.repositories.OrderRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -30,7 +32,12 @@ public class OrderService {
     public List<Order> getByEmail(String email){ return orderRepository.findByClientEmail(email); }
 
     public Order createOrder(OrderRequestDTO orderRequestDTO){
+
         Product product = productRepository.findById(orderRequestDTO.productId()).orElseThrow(ProductNotFoundException::new);
+        if (orderRepository.findByProductUuid(product.getUuid()).isPresent()){
+            throw new ProductSoldException();
+        }
+
         Order order = new Order(orderRequestDTO.clientEmail(), PaymentStatusEnum.PENDENTE, product);
 
         String subject = "Seu pedido foi realizado";
