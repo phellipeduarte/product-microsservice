@@ -17,11 +17,13 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping()
     public ResponseEntity<List<Order>> getAll(){
         return ResponseEntity.ok().body(orderService.getAll());
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/email")
     public ResponseEntity getByEmail(@RequestParam String email){
         return ResponseEntity.ok().body(orderService.getByEmail(email));

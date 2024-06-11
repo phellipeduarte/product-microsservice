@@ -19,11 +19,13 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
         return ResponseEntity.ok().body(productService.getAll());
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity createProduct(
             @RequestParam("file") MultipartFile multipartFile,
