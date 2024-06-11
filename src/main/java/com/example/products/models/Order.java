@@ -23,7 +23,7 @@ public class Order {
 
     private PaymentStatusEnum status;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 

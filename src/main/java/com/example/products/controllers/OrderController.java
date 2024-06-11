@@ -1,7 +1,6 @@
 package com.example.products.controllers;
 
 
-import com.example.products.dtos.OrderEmailRequestDTO;
 import com.example.products.dtos.OrderRequestDTO;
 import com.example.products.models.Order;
 import com.example.products.services.OrderService;
@@ -24,10 +23,11 @@ public class OrderController {
     }
 
     @GetMapping("/email")
-    public ResponseEntity getByEmail(@RequestBody OrderEmailRequestDTO orderEmailRequestDTO){
-        return ResponseEntity.ok().body(orderService.getByEmail(orderEmailRequestDTO.email()));
+    public ResponseEntity getByEmail(@RequestParam String email){
+        return ResponseEntity.ok().body(orderService.getByEmail(email));
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping()
     public ResponseEntity createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         return ResponseEntity.ok().body(orderService.createOrder(orderRequestDTO));
